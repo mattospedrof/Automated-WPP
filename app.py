@@ -1,4 +1,4 @@
-import os, time, math, logging, threading, random, webbrowser
+import os, time, math, logging, threading, random, webbrowser, sys
 from datetime import datetime, timedelta
 from tkinter import filedialog, messagebox
 
@@ -579,5 +579,9 @@ class App(ctk.CTk):
 
 
 if __name__ == "__main__":
+    if getattr(sys, "frozen", False):
+        base_dir = os.path.dirname(sys.executable)
+        internal = os.path.join(base_dir, "_internal")
+        os.chdir(internal if os.path.isdir(internal) else base_dir)
     app = App()
     app.mainloop()

@@ -10,6 +10,8 @@ python -m pip show pyinstaller >nul 2>&1
 if %errorlevel% neq 0 (
     echo [1/3] Instalando PyInstaller...
     python -m pip install pyinstaller
+    REM pip pode retornar 1 por avisos (ex: pip upgrade), verificar instalacao diretamente
+    python -m pip show pyinstaller >nul 2>&1
     if %errorlevel% neq 0 (
         echo ERRO: Falha ao instalar PyInstaller.
         pause
@@ -39,7 +41,7 @@ REM Build com PyInstaller
 pyinstaller --noconfirm ^
     --onedir ^
     --windowed ^
-    --name "WhatsApp Sender" ^
+    --name "WA_Sender" ^
     --icon=media\icon-config.png ^
     --add-data "configs;configs" ^
     --add-data "views;views" ^
