@@ -101,4 +101,4 @@ Se algum contato não deve ser processado, preencha a coluna de telefone com `Er
 
 ---
 
-Feito com 💚 por [Frannkz Tech](https://github.com/mattospedrof)
+Feito com 💚 por [Frannkz Tech](https://frannkz-tech.vercel.app/)
