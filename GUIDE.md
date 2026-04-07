@@ -23,7 +23,7 @@ As etiquetas (`@TAG`) são usadas como marcadores acima de cada função nos arq
 | `@TAG: app-build-ui` | `App._build_ui()` | Monta toda a interface chamando `sidebar()` e `main_view()` |
 | `@TAG: app-close-handler` | `App._on_close_app()` | Intercepta o fechamento da janela — para o envio e agenda o cleanup |
 | `@TAG: app-cleanup-exit` | `App._cleanup_and_exit()` | Fecha o driver do Chrome e destrói a janela |
-| `@TAG: app-load-file` | `App._load_file()` | Carrega Excel/CSV, cria colunas `Status`/`Mensagem` se não existirem, sugere linha inicial automática |
+| `@TAG: app-load-file` | `App._load_file()` | Carrega Excel/CSV, cria colunas `Status`/`Mensagem` se não existirem, sugere linha inicial automática com base no progresso |
 | `@TAG: app-suggest-start` | `App._sugest_start_line()` | Percorre `Status` e retorna a primeira linha sem envio (sugestão para o usuário) |
 | `@TAG: app-help` | `App._help()` | Abre a página de ajuda no navegador padrão |
 | `@TAG: app-connect` | `App._connect()` | Inicia o processo de conexão com o WhatsApp Web em thread separada |
