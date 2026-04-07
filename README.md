@@ -2,12 +2,12 @@
 
 > **Automatize seus envios em massa no WhatsApp de forma simples, segura e organizada.**
 
-Uma aplicação desktop construída com Python que transforma o envio de mensagens em larga escala — ideal para campanhas, comunicados e ações de marketing pessoal.
+Uma aplicação desktop que transforma o envio de mensagens em larga escala — ideal para campanhas, comunicados e ações de marketing pessoal.
 
 ---
 
 <p align="center">
-  <strong>Fkz Tech</strong> &nbsp;•&nbsp; v1.0.0
+  <strong>Fkz Tech - WA Sender</strong> &nbsp;•&nbsp; v1.0.0
 </p>
 
 ---
@@ -20,7 +20,7 @@ Imagine enviar uma mensagem personalizada para centenas de contatos, um por um, 
 2. **Conecta ao WhatsApp Web** — via navegador, com escaneamento do QR Code
 3. **Envia mensagens personalizadas** — cada contato recebe a mensagem com seu primeiro nome
 4. **Atualiza a planilha em tempo real** — coluna `Status` é preenchida a cada envio (`Enviado`, `wpp n encontrado`, `Erro`)
-5. **Retoma de onde parou** — se parar no meio, basta reiniciar que os contatos já enviados são pulados automaticamente
+5. **Retoma de onde parou** — se parar no meio, basta reiniciar que os contatos já enviados são pulados automaticamente.
 
 ---
 
@@ -28,39 +28,29 @@ Imagine enviar uma mensagem personalizada para centenas de contatos, um por um, 
 
 ### Pré-requisitos
 
-- **Python 3.12+**
 - **Google Chrome** instalado na máquina
 - **WhatsApp Web** acessível (conta ativa)
 - **Windows** (o app foi otimizado para este sistema)
 
-### Instalação
+### Instalando
 
-```bash
-# Clone o repositório
-git clone https://github.com/mattospedrof/Automated-WPP.git
-cd Automated-WPP
+1. Baixe a última versão em **[Releases](https://github.com/mattospedrof/Automated-WPP/releases)**
+2. Extraia o `.zip` em uma pasta da sua escolha
+3. Execute o `.exe`
 
-# Crie o ambiente virtual
-python -m venv venv
-venv\Scripts\activate
+> Na primeira execução o app pode demorar alguns segundos para abrir — é normal, ele está preparando o ambiente.
 
-# Instale as dependências
-pip install -r requirements.txt
-```
-
-### Executando
-
-```bash
-python app.py
-```
+### Usando
 
 O app abre em tela cheia. Siga o fluxo:
 
-1. Clique em **Conectar WhatsApp** → escaneie o QR Code
-2. Selecione sua planilha com os contatos
+1. Clique em **Conectar WhatsApp** → escaneie o QR Code que aparece no navegador
+2. Clique em **Selecionar arquivo** e escolha sua planilha
 3. Escreva ou cole a mensagem (use `{primeiro_nome}` para personalizar)
 4. Defina o intervalo de linhas desejado
 5. Clique em **▶ Iniciar Envio**
+
+> **Dica:** após o primeiro QR Code escaneado, a sessão fica salva. Nas próximas execuções, o app conecta direto — sem escanear de novo.
 
 ---
 
@@ -102,59 +92,6 @@ Se algum contato não deve ser processado, preencha a coluna de telefone com `Er
 
 ---
 
-## 🏗️ Gerando o executável
-
-Se quiser distribuir o app sem precisar do Python instalado:
-
-```bash
-build.bat
-```
-
-O executável será gerado em `dist\WhatsApp Sender\`.
-
----
-
-## 📦 Gerando uma nova release
-
-Para criar uma versão atualizada no GitHub:
-
-1. Edite `utils/version.py` e atualize o número da versão
-2. Execute `release.bat` (requer [GitHub CLI](https://cli.github.com/) instalado e autenticado)
-
-O script faz o build, anexa o `.exe` e cria uma draft release automaticamente.
-
----
-
-## 📁 Estrutura do projeto
-
-```
-├── app.py                  # Aplicação principal (lógica + montagem da UI)
-├── src/
-│   └── bot.py              # Motor de automação do WhatsApp (Selenium)
-├── views/                  # Componentes visuais da interface
-│   ├── sidebar.py          # Barra lateral (status, botões, estatísticas)
-│   ├── main_view.py        # Frame principal (orquestrador)
-│   ├── file_card.py        # Card de seleção de planilha
-│   ├── message_card.py     # Card de edição da mensagem
-│   ├── config_card.py      # Card de configurações e botões de envio
-│   ├── progress_card.py    # Card de barra de progresso
-│   └── log_card.py         # Card de log de envios
-├── utils/                  # Utilitários
-│   ├── chrome_check.py     # Detecção da versão do Chrome
-│   ├── notify_user.py      # Notificações ao usuário
-│   ├── updater.py          # Sistema de auto-update via GitHub
-│   └── version.py          # Versão única do app
-├── configs/                # Configurações
-│   ├── conf_logs.py        # Configuração de logging
-│   └── config_colors.py    # Paleta de cores e fontes
-├── build.bat               # Script de build (PyInstaller)
-├── release.bat             # Script de release (GitHub Releases)
-├── requirements.txt        # Dependências Python
-└── .gitignore              # Arquivos ignorados pelo Git
-```
-
----
-
 ## ⚠️ Notas importantes
 
 - Este app utiliza **WhatsApp Web**. Não modifica o aplicativo oficial.
@@ -164,22 +101,4 @@ O script faz o build, anexa o `.exe` e cria uma draft release automaticamente.
 
 ---
 
-## 🛠️ Tecnologias
-
-| Stack | Uso |
-|-------|-----|
-| **Python 3.12** | Linguagem principal |
-| **CustomTkinter** | Interface gráfica moderna (dark mode) |
-| **Selenium + undetected-chromedriver** | Automação do WhatsApp Web |
-| **Pandas + Openpyxl** | Manipulação de planilhas |
-| **PyInstaller** | Geração do executável |
-
----
-
-## 📄 Licença
-
-Projeto desenvolvido por **Fkz Tech**. Uso pessoal e interno.
-
----
-
-Feito com 💚 por [Fkz Tech](https://github.com/mattospedrof)
+Feito com 💚 por [Frannkz Tech](https://github.com/mattospedrof)
