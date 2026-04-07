@@ -1,4 +1,4 @@
-# 📱 WhatsApp Sender
+# 📱 WhatsApp Sender (WPP Sender)
 
 > **Automatize seus envios em massa no WhatsApp de forma simples, segura e organizada.**
 
@@ -7,14 +7,14 @@ Uma aplicação desktop que transforma o envio de mensagens em larga escala — 
 ---
 
 <p align="center">
-  <strong>Fkz Tech - WA Sender</strong> &nbsp;•&nbsp; v1.0.0
+  <strong>Fkz Tech - WPP Sender</strong> &nbsp;•&nbsp; v1.0.0
 </p>
 
 ---
 
 ## ✨ O que ele faz
 
-Imagine enviar uma mensagem personalizada para centenas de contatos, um por um, como se você estivesse digitando manualmente — mas tudo automatizado. O **WhatsApp Sender** cuida de todo o processo:
+Imagine enviar uma mensagem personalizada para centenas de contatos, um por um, como se você estivesse digitando manualmente — mas tudo automatizado. O **WPP Sender** cuida de todo o processo:
 
 1. **Carrega sua planilha** — Excel (`.xlsx`) ou CSV com `Id`, `Cliente` e `Celular`/`Telefone`
 2. **Conecta ao WhatsApp Web** — via navegador, com escaneamento do QR Code

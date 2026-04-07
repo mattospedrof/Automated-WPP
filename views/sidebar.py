@@ -25,11 +25,11 @@ def sidebar(self):
         master=self.frame_sidebar,
         image=self.icon_WA_Sender,
         compound="left",
-        text=" WhatsApp Sender",
+        text=" WPP Sender",
         font=ctk.CTkFont(family=F, size=17, weight="bold"),
         text_color=C["text"],
         anchor="center",
-    ).place(x=52, y=20)
+    ).place(x=80, y=20)
     ctk.CTkLabel(
         master=self.frame_sidebar,
         text=F"Fkz Tech • v{VERSION}",
