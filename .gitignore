@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.spec
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sessions e dados temporarios
+wa_session/
+tmp/
+*.xlsx~
+*.csv~
+
+# Logs
+tmp/logs/
+
+# PyInstaller
+*.manifest
+*.spec.backup
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Media
+media/color_data.png
+
+# Plan Test
+lista_teste.xlsx
+app_test_fixed.py
