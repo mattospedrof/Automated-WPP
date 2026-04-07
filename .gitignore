@@ -43,3 +43,5 @@ media/color_data.png
 # Plan Test
 lista_teste.xlsx
 app_test_fixed.py
+build.bat
+release.bat
