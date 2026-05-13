@@ -1,4 +1,4 @@
-# Python
+# ─── Python ───────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
@@ -8,40 +8,115 @@ __pycache__/
 dist/
 build/
 *.spec
+*.spec.backup
+*.manifest
 
-# Virtual environment
+# ─── Virtual Environment ──────────────────────────────
 .venv/
 venv/
 env/
 
-# IDE
+# ─── IDE ──────────────────────────────────────────────
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Sessions e dados temporarios
+# ─── Selenium / Chrome ────────────────────────────────
+chromedriver
+chromedriver.exe
+*.chromedriver
+
+# ─── WhatsApp Session (tokens de autenticação) ────────
 wa_session/
-tmp/
+# Mantém a pasta no repo mas ignora o conteúdo
+!wa_session/.gitkeep
+
+# ─── Planilhas e dados de clientes ────────────────────
+# IMPORTANTE: nunca subir dados reais de contatos
+*.xlsx
+*.csv
 *.xlsx~
 *.csv~
+# Exceção: arquivo de exemplo com dados fictícios
+!exemplo_contatos.xlsx
 
-# Logs
+# ─── Logs ─────────────────────────────────────────────
+*.log
+logs/
+tmp/
 tmp/logs/
 
-# PyInstaller
-*.manifest
+# ─── Sessões e dados temporários ──────────────────────
+.qwen
+
+# ─── PyInstaller ──────────────────────────────────────
+# Gerado pelo build — não deve ir pro repo
 *.spec.backup
 
-# OS
+# ─── OS ───────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 
-# Media
-media/color_data.png
-
-# Plan Test
+# ─── Arquivos de teste / scripts internos ─────────────
 lista_teste.xlsx
 app_test_fixed.py
 build.bat
 release.bat
+
+# ─── Media gerada ─────────────────────────────────────
+media/color_data.png
+
+# ══════════════════════════════════════════════════════
+# Next.js / Node
+# ══════════════════════════════════════════════════════
+
+# ─── Dependências ─────────────────────────────────────
+/node_modules
+/web/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ─── Build / Output ───────────────────────────────────
+/.next/
+/out/
+/build
+/web/.next/
+/web/out/
+
+# ─── Testes ───────────────────────────────────────────
+/coverage
+
+# ─── Variáveis de ambiente ────────────────────────────
+# NUNCA commitar .env com chaves reais
+# Se já commitou: git rm --cached .env.local
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+.env.staging
+
+# ─── Debug logs ───────────────────────────────────────
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ─── Certificados / Chaves ────────────────────────────
+*.pem
+*.key
+*.p12
+*.pfx
+
+# ─── Vercel ───────────────────────────────────────────
+.vercel
+
+# ─── TypeScript ───────────────────────────────────────
+*.tsbuildinfo
+next-env.d.ts
