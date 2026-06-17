@@ -17,8 +17,8 @@ def sidebar(self):
     self.frame_sidebar.pack(side="left", fill="y", padx=(0,5))
     self.frame_sidebar.pack_propagate(False)
     self.icon_WA_Sender = ctk.CTkImage(
-        light_image=Image.open("media/icon-message-presentation.png"),
-        dark_image=Image.open("media/icon-message-presentation.png"),
+        light_image=Image.open("media/icon-message.png"),
+        dark_image=Image.open("media/icon-message.png"),
         size=(20, 20)
     )
     ctk.CTkLabel(
