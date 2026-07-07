@@ -1,6 +1,7 @@
 import os
 import logging
 from datetime import datetime
+from utils.paths import data_path
 
 
 # @TAG: conf-logging
@@ -9,7 +10,7 @@ def conf_logging():
     month_year = today.strftime("%m-%Y")
     day = today.strftime("%d_%m_%Y")
 
-    dir_logs = os.path.join("tmp", "logs", month_year)
+    dir_logs = data_path("tmp", "logs", month_year)
     os.makedirs(dir_logs, exist_ok=True)
 
     file_log = f"log_{day}.txt"

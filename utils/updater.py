@@ -1,20 +1,20 @@
-import os
-import sys
 import logging
-import threading
+import os
 import subprocess
+import sys
+import threading
 import urllib.request
-from tkinter import messagebox
 
 import requests
 from packaging.version import Version
 
+from utils.paths import data_path
 from utils.version import VERSION
 
 GITHUB_USER = "mattospedrof"
 GITHUB_REPO = "Automated-WPP"
-GITHUB_API  = f"https://api.github.com/repos/{GITHUB_USER}/{GITHUB_REPO}/releases/latest"
-EXE_NAME    = "app.exe"
+GITHUB_API = f"https://api.github.com/repos/{GITHUB_USER}/{GITHUB_REPO}/releases/latest"
+INSTALLER_PREFIX = "WA_Sender_Setup"
 
 
 # @TAG: updater-fetch-release
@@ -23,17 +23,33 @@ def _get_latest_release():
         resp = requests.get(GITHUB_API, timeout=8)
         resp.raise_for_status()
         data = resp.json()
-        tag  = data.get("tag_name", "").lstrip("v")
-        url  = next(
-            (a["browser_download_url"]
-             for a in data.get("assets", [])
-             if a["name"] == EXE_NAME),
+        tag = data.get("tag_name", "").lstrip("v")
+        assets = data.get("assets", [])
+
+        installer = next(
+            (
+                asset for asset in assets
+                if asset.get("name", "").startswith(INSTALLER_PREFIX)
+                and asset.get("name", "").lower().endswith(".exe")
+            ),
             None,
         )
-        return tag, url
-    except Exception as e:
-        logging.warning(f"[updater] Falha ao consultar GitHub: {e}")
-        return None, None
+        if not installer:
+            installer = next(
+                (
+                    asset for asset in assets
+                    if "setup" in asset.get("name", "").lower()
+                    and asset.get("name", "").lower().endswith(".exe")
+                ),
+                None,
+            )
+
+        url = installer.get("browser_download_url") if installer else None
+        name = installer.get("name") if installer else None
+        return tag, url, name
+    except Exception as exc:
+        logging.warning(f"[updater] Falha ao consultar GitHub: {exc}")
+        return None, None, None
 
 
 # @TAG: updater-download
@@ -43,31 +59,32 @@ def _download_exe(url, dest_path, progress_callback=None):
             total = int(resp.headers.get("Content-Length", 0))
             downloaded = 0
             chunk = 8192
-            with open(dest_path, "wb") as f:
+            with open(dest_path, "wb") as file:
                 while True:
                     buf = resp.read(chunk)
                     if not buf:
                         break
-                    f.write(buf)
+                    file.write(buf)
                     downloaded += len(buf)
                     if progress_callback and total:
                         progress_callback(int(downloaded / total * 100))
         return True
-    except Exception as e:
-        logging.error(f"[updater] Erro no download: {e}")
+    except Exception as exc:
+        logging.error(f"[updater] Erro no download: {exc}")
         return False
 
 
 # @TAG: updater-apply
-def _apply_update(new_exe_path):
+def _apply_update(installer_path):
     current = sys.executable
     bat_path = os.path.join(os.path.dirname(current), "_updater.bat")
 
-    with open(bat_path, "w", encoding="utf-8") as f:
-        f.write(
+    with open(bat_path, "w", encoding="utf-8") as file:
+        file.write(
             "@echo off\n"
             "timeout /t 2 /nobreak >nul\n"
-            f'move /y "{new_exe_path}" "{current}"\n'
+            f'start /wait "" "{installer_path}" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /CLOSEAPPLICATIONS\n'
+            f'del /f /q "{installer_path}" >nul 2>nul\n'
             f'start "" "{current}"\n'
             'del "%~f0"\n'
         )
@@ -78,56 +95,42 @@ def _apply_update(new_exe_path):
 
 # @TAG: updater-check
 def check_for_updates(app):
-    latest_tag, download_url = _get_latest_release()
+    if not getattr(sys, "frozen", False):
+        logging.info("[updater] Ignorado fora do executavel empacotado.")
+        return
+
+    threading.Thread(target=_check_and_update, args=(app,), daemon=True).start()
+
+
+def _check_and_update(app):
+    latest_tag, download_url, asset_name = _get_latest_release()
 
     if not latest_tag or not download_url:
+        logging.info("[updater] Nenhuma release valida encontrada.")
         return
 
     try:
         is_newer = Version(latest_tag) > Version(VERSION)
     except Exception:
+        logging.warning(f"[updater] Versao invalida na release: {latest_tag}")
         return
 
     if not is_newer:
         return
 
-    def _prompt():
-        answer = messagebox.askyesno(
-            "Atualização disponível",
-            f"Nova versão disponível: v{latest_tag}\n"
-            f"Versão atual: v{VERSION}\n\n"
-            "Deseja atualizar agora?\n"
-            "(O app será reiniciado automaticamente)",
-        )
-        if not answer:
-            return
+    dest = data_path("tmp", asset_name or f"{INSTALLER_PREFIX}_v{latest_tag}.exe")
+    app._log(f"⬇️ Atualização v{latest_tag} encontrada. Baixando...")
 
-        threading.Thread(target=_run_update, args=(download_url,), daemon=True).start()
+    def _on_progress(pct):
+        app._log(f"   📦 {pct}%...")
 
-    def _run_update(url):
-        dest = os.path.join(
-            os.path.dirname(sys.executable),
-            f"_{EXE_NAME}.new",
-        )
+    success = _download_exe(download_url, dest, progress_callback=_on_progress)
 
-        app._log(f"⬇️ Baixando atualização v{latest_tag}...")
-
-        def _on_progress(pct):
-            app._log(f"   📦 {pct}%...")
-
-        success = _download_exe(url, dest, progress_callback=_on_progress)
-
-        if success:
-            app._log("✅ Download concluído. Reiniciando...")
-            logging.info(f"[updater] Atualizado para v{latest_tag}")
-            app.after(500, lambda: _apply_update(dest))
-        else:
-            app.after(0, lambda: messagebox.showerror(
-                "Erro",
-                "Não foi possível baixar a atualização.\n"
-                "Verifique sua conexão e tente novamente.",
-            ))
-            if os.path.exists(dest):
-                os.remove(dest)
-
-    app.after(0, _prompt)
+    if success:
+        app._log("✅ Download concluído. Instalando atualização...")
+        logging.info(f"[updater] Instalando {asset_name} para v{latest_tag}")
+        app.after(500, lambda: _apply_update(dest))
+    else:
+        app._log("⚠️ Não foi possível baixar a atualização.")
+        if os.path.exists(dest):
+            os.remove(dest)

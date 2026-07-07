@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from configs.config_colors import C, F
 from PIL import Image
+from utils.paths import media_path
 
 
 # @TAG: view-progress-card
@@ -17,8 +18,8 @@ def progress_card(self):
     self.frame_progress.pack(fill="x", pady=(0, P), padx=(0,10))
     self.frame_progress.pack_propagate(False)
     self.icon_progress = ctk.CTkImage(
-        light_image=Image.open("media/icon-progress-bar.png"),
-        dark_image=Image.open("media/icon-progress-bar.png"),
+        light_image=Image.open(media_path("icon-progress-bar.png")),
+        dark_image=Image.open(media_path("icon-progress-bar.png")),
         size=(20, 20)
     )
     self.frame_progress_header = ctk.CTkFrame(

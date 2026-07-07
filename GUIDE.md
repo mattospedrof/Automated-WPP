@@ -14,7 +14,7 @@ As etiquetas (`@TAG`) são usadas como marcadores acima de cada função nos arq
 | `@TAG: helper-build-message` | `build_message(template, full_name)` | Substitui `{primeiro_nome}` no template da mensagem pelo nome extraído |
 | `@TAG: helper-is-error` | `is_erro(p)` | Verifica se um valor de planilha indica um registro inválido/pular |
 | `@TAG: helper-format-time` | `fmt_time(s)` | Formata segundos em string legível: `3700` → `"1h 01min"` |
-| `@TAG: helper-error-file-path` | `get_error_file_path()` | Retorna o caminho do arquivo de erros do dia (`tmp/erros_DD_MM_YYYY.txt`) |
+| `@TAG: helper-error-file-path` | `get_error_file_path()` | Retorna o caminho do arquivo de erros do dia em `%APPDATA%\WA_Sender\tmp` |
 | `@TAG: helper-register-error` | `register_error(cid, phone)` | Registra ID e telefone falhos no arquivo de erros |
 | `@TAG: helper-phone-column` | `get_phone_column(df)` | Detecta a coluna de telefone no DataFrame. Prefere `"Celular"` sobre `"Telefone"` |
 | `@TAG: sheet-updater-init` | `SheetUpdater.__init__()` | Abre o Excel, mapeia as colunas `Status` e `Mensagem`. Se não existirem, cria nas próximas colunas vazias |
@@ -32,7 +32,7 @@ As etiquetas (`@TAG`) são usadas como marcadores acima de cada função nos arq
 | `@TAG: app-session-detected` | `App._on_session_detected()` | Log informa que uma sessão salva foi encontrada (pula QR Code) |
 | `@TAG: app-connect-cancelled` | `App._on_connect_cancelled()` | Usuário fechou o navegador — reset silencioso sem mostrar erro |
 | `@TAG: app-connect-error` | `App._on_connect_error()` | Falha real de conexão — mostra messagebox de erro |
-| `@TAG: app-disconnect` | `App._disconnect()` | Desconecta o bot, limpa a sessão `wa_session/` e reseta a UI |
+| `@TAG: app-disconnect` | `App._disconnect()` | Desconecta o bot, limpa a sessão em `%APPDATA%\WA_Sender\wa_session` e reseta a UI |
 | `@TAG: app-start-send` | `App._start()` | Valida tudo, normaliza telefones, cancela timer de reset e inicia o loop de envio |
 | `@TAG: app-send-loop-wrapper` | `App._send_loop()` | Wrapper com try/except genérico para o loop — captura erros fatais e mostra dialog |
 | `@TAG: app-reset-buttons` | `App._reset_buttons()` | Reabilita o botão Iniciar e agenda o reset automático após 10s |
@@ -52,7 +52,7 @@ As etiquetas (`@TAG`) são usadas como marcadores acima de cada função nos arq
 | Etiqueta | Função | O que faz |
 |----------|--------|-----------|
 | `@TAG: bot-init` | `WhatsAppBot.__init__()` | Armazena o diretório do perfil Chrome e inicializa o driver como `None` |
-| `@TAG: bot-check-session` | `WhatsAppBot.has_existing_session()` | Verifica se o diretório `Default/` existe dentro de `wa_session/` (sessão salva) |
+| `@TAG: bot-check-session` | `WhatsAppBot.has_existing_session()` | Verifica se o diretório `Default/` existe dentro da sessão salva em `%APPDATA%\WA_Sender\wa_session` |
 | `@TAG: bot-launch` | `WhatsAppBot.open_whatsapp()` | Detecta versão do Chrome, abre o navegador com perfil persistente e navega ao WhatsApp Web |
 | `@TAG: bot-wait-login` | `WhatsAppBot._await_main_app()` | Aguarda até `QR_WAIT_TIMEOUT` pelo elemento principal — dispara notificação ao conectar |
 | `@TAG: bot-send` | `WhatsAppBot.send_message()` | **Envio principal.** Normaliza telefone, abre URL, aguarda página, clica Enviar, confirma ✓. 1 retry em erro transitório |
@@ -100,7 +100,8 @@ As etiquetas (`@TAG`) são usadas como marcadores acima de cada função nos arq
 
 | Etiqueta | Função | Arquivo | O que faz |
 |----------|--------|---------|-----------|
-| `@TAG: conf-logging` | `conf_logging()` | `conf_logs.py` | Configura logging para `tmp/logs/MM-YYYY/log_DD_MM_YYYY.txt` |
+| `@TAG: conf-logging` | `conf_logging()` | `conf_logs.py` | Configura logging para `%APPDATA%\WA_Sender\tmp\logs\MM-YYYY\log_DD_MM_YYYY.txt` |
+| — | `utils.paths` | `utils/paths.py` | Centraliza caminhos do app instalado: recursos empacotados, pasta `%APPDATA%\WA_Sender` e diretórios runtime |
 | — | `C` (dict) | `config_colors.py` | Paleta de cores do app (dark mode + verde WhatsApp) |
 | — | `F` (str) | `config_colors.py` | Fonte padrão: `"Arial"` |
 

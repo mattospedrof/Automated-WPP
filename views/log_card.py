@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from configs.config_colors import C, F
 from PIL import Image
+from utils.paths import media_path
 
 
 # @TAG: view-log-card
@@ -17,8 +18,8 @@ def log_card(self):
     self.frame_log.pack(fill="x", pady=(0, P), padx=(0,10))
     self.frame_log.pack_propagate(False)
     self.icon_log = ctk.CTkImage(
-        light_image=Image.open("media/icon-log.png"),
-        dark_image=Image.open("media/icon-log.png"),
+        light_image=Image.open(media_path("icon-log.png")),
+        dark_image=Image.open(media_path("icon-log.png")),
         size=(20, 20)
     )
     self.frame_log_header = ctk.CTkFrame(

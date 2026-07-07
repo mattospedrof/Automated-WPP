@@ -1,14 +1,15 @@
 import customtkinter as ctk
 from configs.config_colors import C, F
 from PIL import Image
+from utils.paths import media_path
 
 
 # @TAG: view-config-card
 def config_card(self):
     P = self.P
     self.icon_config = ctk.CTkImage(
-        light_image=Image.open("media/icon-config.png"),
-        dark_image=Image.open("media/icon-config.png"),
+        light_image=Image.open(media_path("icon-config.png")),
+        dark_image=Image.open(media_path("icon-config.png")),
         size=(20, 20)
     )
     self.frame_config = ctk.CTkFrame(
@@ -93,6 +94,19 @@ def config_card(self):
         setattr(self, f"entry_{attr}", entry)
     field(0, "Linha inicial:", "range_start", "1")
     field(1, "Linha final:", "range_end", "0")
+    self.chk_responsible_mode = ctk.CTkCheckBox(
+        master=content,
+        text="Modo abordagem responsável",
+        font=ctk.CTkFont(family=F, size=13),
+        text_color=C["text2"],
+        fg_color=C["green"],
+        hover_color=C["green_d"],
+        border_color=C["border2"],
+        checkbox_height=18,
+        checkbox_width=18,
+    )
+    self.chk_responsible_mode.pack(anchor="w", padx=16, pady=(0, 10))
+    self.chk_responsible_mode.select()
     ctk.CTkFrame(
         master=content,
         fg_color=C["border"],

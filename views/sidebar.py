@@ -3,6 +3,7 @@ import webbrowser
 from configs.config_colors import C, F
 from PIL import Image
 from utils.version import VERSION
+from utils.paths import media_path
 
 
 # @TAG: view-sidebar
@@ -17,8 +18,8 @@ def sidebar(self):
     self.frame_sidebar.pack(side="left", fill="y", padx=(0,5))
     self.frame_sidebar.pack_propagate(False)
     self.icon_WA_Sender = ctk.CTkImage(
-        light_image=Image.open("media/icon-message.png"),
-        dark_image=Image.open("media/icon-message.png"),
+        light_image=Image.open(media_path("icon-message.png")),
+        dark_image=Image.open(media_path("icon-message.png")),
         size=(20, 20)
     )
     ctk.CTkLabel(

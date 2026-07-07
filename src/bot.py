@@ -12,6 +12,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from utils.paths import data_path
 
 
 QR_WAIT_TIMEOUT      = 90
@@ -60,13 +61,17 @@ INVALID_KEYWORDS = (
 
 class WhatsAppBot:
     # @TAG: bot-init
-    def __init__(self, profile_dir: str = "./wa_session"):
+    def __init__(self, profile_dir: str | None = None):
+        if profile_dir is None:
+            profile_dir = data_path("wa_session")
         self.profile_dir = profile_dir
         self.driver = None
 
     # @TAG: bot-check-session
     @staticmethod
-    def has_existing_session(profile_dir: str = "./wa_session") -> bool:
+    def has_existing_session(profile_dir: str | None = None) -> bool:
+        if profile_dir is None:
+            profile_dir = data_path("wa_session")
         default_path = os.path.join(profile_dir, "Default")
         return os.path.isdir(default_path)
 

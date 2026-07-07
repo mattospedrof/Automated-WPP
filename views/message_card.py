@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from configs.config_colors import C, F
 from PIL import Image
+from utils.paths import media_path
 
 
 # @TAG: view-message-card
@@ -15,8 +16,8 @@ def message_card(self):
     )
     self.frame_message.pack(side="left", fill="both", expand=True, padx=(0, 5))
     self.icon_textbox = ctk.CTkImage(
-        light_image=Image.open("media/icon-textbox.png"),
-        dark_image=Image.open("media/icon-textbox.png"),
+        light_image=Image.open(media_path("icon-textbox.png")),
+        dark_image=Image.open(media_path("icon-textbox.png")),
         size=(20, 20)
     )
     self.frame_message_header = ctk.CTkFrame(
@@ -36,7 +37,7 @@ def message_card(self):
     ).place(x=15, rely=0.5, anchor="w")
     ctk.CTkLabel(
         master=self.frame_message,
-        text="Cole ou escreva seu texto que será utilizado. Use {primeiro_nome} para personalizar com o primeiro nome do seu cliente.",
+        text="Cole a oferta ou mensagem principal. Use {primeiro_nome}; no modo responsável o app adiciona abordagem e opt-out.",
         font=ctk.CTkFont(family=F, size=14),
         text_color=C["muted"],
         anchor="w",

@@ -40,6 +40,17 @@ Imagine enviar uma mensagem personalizada para centenas de contatos, um por um, 
 
 > Na primeira execução o app pode demorar alguns segundos para abrir — é normal, ele está preparando o ambiente.
 
+### Gerando instalador Windows
+
+Para entregar como aplicativo instalado no Windows, gere o setup com:
+
+```bat
+build_installer.bat
+```
+
+O instalador final fica em `installer\output\WA_Sender_Setup.exe`.
+Ele instala o app em `%LOCALAPPDATA%\Programs\WA_Sender`, cria atalhos na Área de Trabalho/Menu Iniciar e salva dados persistentes em `%APPDATA%\WA_Sender`.
+
 ### Usando
 
 O app abre em tela cheia. Siga o fluxo:
@@ -88,7 +99,7 @@ Se algum contato não deve ser processado, preencha a coluna de telefone com `Er
 | **Delay inteligente** | Pausa aleatória de 5 a 10 segundos entre mensagens para evitar detecção |
 | **Reset automático** | 10 segundos após concluir, os campos são limpos para um novo envio |
 | **Auto-update** | O app verifica se há novas versões no GitHub e atualiza sozinho |
-| **Logs detalhados** | Cada ação é registrada em `tmp/logs/MM-YYYY/log_DD_MM_YYYY.txt` |
+| **Logs detalhados** | Cada ação é registrada em `%APPDATA%\WA_Sender\tmp\logs\MM-YYYY\log_DD_MM_YYYY.txt` |
 
 ---
 

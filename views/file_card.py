@@ -1,14 +1,15 @@
 import customtkinter as ctk
 from configs.config_colors import C, F
 from PIL import Image
+from utils.paths import media_path
 
 
 # @TAG: view-file-card
 def file_card(self):
     P = self.P
     self.icon_folder = ctk.CTkImage(
-        light_image=Image.open("media/icon-folder.png"),
-        dark_image=Image.open("media/icon-folder.png"),
+        light_image=Image.open(media_path("icon-folder.png")),
+        dark_image=Image.open(media_path("icon-folder.png")),
         size=(20, 20)
     )
     self.frame_file = ctk.CTkFrame(

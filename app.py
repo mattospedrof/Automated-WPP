@@ -9,12 +9,29 @@ import openpyxl
 from src.bot import WhatsAppBot
 from configs.conf_logs import conf_logging
 from configs.config_colors import C, F
+from utils.updater import check_for_updates
+from utils.paths import data_path, ensure_runtime_dirs
 from views.sidebar   import sidebar
 from views.main_view import main_view
 
+ensure_runtime_dirs()
 conf_logging()
 
 MESSAGE_TEMPLATE = ("")
+
+RESPONSIBLE_GREETINGS = (
+    "Olá {primeiro_nome}, tudo bem?",
+    "Oi {primeiro_nome}, tudo bem?",
+    "Olá {primeiro_nome}, espero que esteja bem.",
+)
+
+RESPONSIBLE_INTROS = (
+    "Aqui é da equipe comercial e estou entrando em contato com uma condição que pode fazer sentido para você.",
+    "Passando por aqui para te apresentar uma condição especial da nossa equipe.",
+    "Estou entrando em contato para te apresentar uma oportunidade que pode ser interessante para você.",
+)
+
+OPTOUT_TEXT = "Se não quiser receber mensagens, responda SAIR."
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("green")
@@ -25,8 +42,14 @@ def first_name(s):
     return s.split()[0].capitalize() if s else "Cliente"
 
 # @TAG: helper-build-message
-def build_message(template, full_name):
-    return template.replace("{primeiro_nome}", first_name(full_name))
+def build_message(template, full_name, responsible_mode=False):
+    message = template.replace("{primeiro_nome}", first_name(full_name))
+    if not responsible_mode:
+        return message
+
+    greeting = random.choice(RESPONSIBLE_GREETINGS).replace("{primeiro_nome}", first_name(full_name))
+    intro = random.choice(RESPONSIBLE_INTROS)
+    return f"{greeting}\n\n{intro}\n\n{message}\n\n{OPTOUT_TEXT}"
 
 # @TAG: helper-is-error
 def is_erro(p):
@@ -46,8 +69,7 @@ def fmt_time(s):
 # @TAG: helper-error-file-path
 def get_error_file_path():
     today = datetime.now().strftime("%d_%m_%Y")
-    os.makedirs("tmp", exist_ok=True)
-    return os.path.join("tmp", f"erros_{today}.txt")
+    return data_path("tmp", f"erros_{today}.txt")
 
 # @TAG: helper-register-error
 def register_error(cid, phone):
@@ -133,6 +155,7 @@ class App(ctk.CTk):
         self._build_ui()
 
         self.protocol("WM_DELETE_WINDOW", self._on_close_app)
+        self.after(1500, lambda: check_for_updates(self))
 
     # @TAG: app-build-ui
     def _build_ui(self):
@@ -235,11 +258,12 @@ class App(ctk.CTk):
     # @TAG: app-do-connect
     def _do_connect(self):
         try:
-            has_session = WhatsAppBot.has_existing_session()
+            session_dir = data_path("wa_session")
+            has_session = WhatsAppBot.has_existing_session(session_dir)
             if has_session:
                 self.after(0, self._on_session_detected)
 
-            self.bot = WhatsAppBot()
+            self.bot = WhatsAppBot(session_dir)
             self.bot.open_whatsapp()
             self.after(0, self._on_connected)
         except Exception as e:
@@ -302,7 +326,7 @@ class App(ctk.CTk):
             self.bot = None
         try:
             import shutil
-            session_dir = "./wa_session"
+            session_dir = data_path("wa_session")
             if os.path.isdir(session_dir):
                 shutil.rmtree(session_dir, ignore_errors=True)
                 self._log("🗑️ Sessão removida.")
@@ -332,6 +356,10 @@ class App(ctk.CTk):
             messagebox.showerror("Erro", f"Coluna 'Cliente' não encontrada."); return
 
         template = self.txt_msg.get("0.0", "end").strip()
+        responsible_mode = bool(
+            getattr(self, "chk_responsible_mode", None)
+            and self.chk_responsible_mode.get()
+        )
         if not template:
             messagebox.showwarning("Aviso",
                 "O campo de mensagem está vazio!\n"
@@ -368,13 +396,13 @@ class App(ctk.CTk):
         self.lbl_eta.configure(text="Tempo restante:  calculando...")
         threading.Thread(
             target=self._send_loop,
-            args=(template, delay_min, delay_max, range_start, range_end),
+            args=(template, delay_min, delay_max, range_start, range_end, responsible_mode),
             daemon=True).start()
 
     # @TAG: app-send-loop-wrapper
-    def _send_loop(self, template, dmin, dmax, rs, re):
+    def _send_loop(self, template, dmin, dmax, rs, re, responsible_mode):
         try:
-            self._send_loop_inner(template, dmin, dmax, rs, re)
+            self._send_loop_inner(template, dmin, dmax, rs, re, responsible_mode)
         except Exception as exc:
             import traceback
             tb = traceback.format_exc()
@@ -394,7 +422,7 @@ class App(ctk.CTk):
         self._reset_job_id = self.after(10000, self._reset_after_completion)
 
     # @TAG: app-send-loop-core
-    def _send_loop_inner(self, template, dmin, dmax, rs, re):
+    def _send_loop_inner(self, template, dmin, dmax, rs, re, responsible_mode):
         slice_df    = self.df.iloc[rs:re]
         already_done = slice_df["Status"].astype(str).str.strip().str.lower().isin(
                            ["enviado", "wpp n encontrado"])
@@ -443,7 +471,7 @@ class App(ctk.CTk):
                 continue
 
             t0  = time.time()
-            msg = build_message(template, fname)
+            msg = build_message(template, fname, responsible_mode)
             self._log(f"\n[{processed+1}/{total_valid}]  ID:{cid}  {first_name(fname)}  {phone}")
             logging.info(f"Processando ID:{cid} | {phone}")
 
@@ -579,9 +607,5 @@ class App(ctk.CTk):
 
 
 if __name__ == "__main__":
-    if getattr(sys, "frozen", False):
-        base_dir = os.path.dirname(sys.executable)
-        internal = os.path.join(base_dir, "_internal")
-        os.chdir(internal if os.path.isdir(internal) else base_dir)
     app = App()
     app.mainloop()
